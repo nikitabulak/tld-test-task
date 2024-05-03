@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-<!--        <package name="bul.nik.tldtesttask"/>-->
+        <!--        <package name="bul.nik.tldtesttask"/>-->
         <typeAlias type="bul.nik.tldtesttask.region.model.Region" alias='Region'/>
     </typeAliases>
 </configuration>
