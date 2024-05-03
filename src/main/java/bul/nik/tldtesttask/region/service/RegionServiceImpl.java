@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class RegionServiceImpl implements RegionService {
 
 
     @Override
+    @Transactional
     @Cacheable("regions")
     public RegionDto getRegionById(long id) {
         log.info(String.format("Getting region with id = %d", id));
@@ -29,6 +31,7 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
+    @Transactional
     @Cacheable(value = "regionsLists")
     public List<RegionDto> getRegions(int from, int size) {
         log.info(String.format("Getting regions: from=%d, size = %d", from, size));
@@ -36,23 +39,28 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
+    @Transactional
     @CacheEvict(value = "regionsLists", allEntries = true)
-    public void saveRegion(Region region) {
+    public void saveRegion(RegionDto regionDto) {
+        Region region = RegionDtoMapper.toRegion(regionDto);
         regionRepository.createNewRegion(region);
         log.info(String.format("Saving region: %s", region));
     }
 
     @Override
+    @Transactional
     @Caching(evict = {
-            @CacheEvict(value = "regions", key = "#region.id"),
+            @CacheEvict(value = "regions", key = "#regionDto.id"),
             @CacheEvict(value = "regionsLists", allEntries = true)
     })
-    public void changeRegion(Region region) {
+    public void changeRegion(RegionDto regionDto) {
+        Region region = RegionDtoMapper.toRegion(regionDto);
         regionRepository.updateRegion(region);
         log.info(String.format("Changing region: %s", region));
     }
 
     @Override
+    @Transactional
     @Caching(evict = {
             @CacheEvict(value = "regions"),
             @CacheEvict(value = "regionsLists", allEntries = true)

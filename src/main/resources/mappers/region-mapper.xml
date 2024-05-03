@@ -10,14 +10,13 @@
 
     <select id="getRegions" parameterType="map" resultMap="RegionMap">
         SELECT id, name, short_name as shortName
-        FROM regions
-        LIMIT #{size}
+        FROM regions LIMIT #{size}
         OFFSET #{from};
     </select>
 
     <insert id="createNewRegion" parameterType="Region" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO regions (name, short_name)
-        VALUES (#{name}, #{shortName}) ON CONFLICT DO NOTHING;
+        VALUES (#{name}, #{shortName});
     </insert>
 
     <update id="updateRegion" parameterType="Region">
